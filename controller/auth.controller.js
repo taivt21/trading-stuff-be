@@ -45,6 +45,7 @@ const login = async (req, res) => {
         img: userLogin.img,
         status: userLogin.status,
         roleName: userLogin.roleName,
+        point: userLogin.point
       };
 
       const accessToken = createAccessToken(payload);
@@ -87,6 +88,7 @@ const login = async (req, res) => {
           img: createdUser.img,
           status: createdUser.status,
           roleName: createdUser.roleName,
+          point: createdUser.point
         };
 
         const accessToken = createAccessToken(payload);
