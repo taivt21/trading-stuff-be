@@ -9,17 +9,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Khởi tạo Storage của Firebase
 const storage = new Storage({
-  projectId: "auth-fhome",
-  keyFilename: path.join(__dirname, "../config/serviceAccount.json"),
+  projectId: "noti-1620",
+  keyFilename: path.join(__dirname, "../config/google-services.json"),
 });
 
 // Lấy reference đến bucket trong Firebase Storage
-const bucket = storage.bucket("auth-fhome.appspot.com");
+const bucket = storage.bucket("noti-1620.appspot.com");
 
 // Khởi tạo middleware upload ảnh với Multer
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1024 * 1024 * 5 }, // giới hạn kích thước file là 5MB
+  // limits: { fileSize: 1024 * 1024 * 5 }, // giới hạn kích thước file là 5MB
   fileFilter: (req, file, cb) => {
     // Kiểm tra định dạng file
     const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];

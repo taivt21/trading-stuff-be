@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     img: { type: String },
     point: { type: Number },
-    typePosts: { type: String, enum: ["recieve", "give"] },
+    typePost: { type: String, enum: ["recieve", "give"] },
   },
   { timestamps: true }
 );

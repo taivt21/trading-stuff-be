@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "887903848951",
+    "project_id": "noti-1620",
+    "storage_bucket": "noti-1620.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887903848951:android:416aeffe6c9c81a2a106f2",
+        "android_client_info": {
+          "package_name": "com.example.noti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887903848951-nu0qabi327m4r20qk36si40jg9f4pl30.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.noti",
+            "certificate_hash": "547c1c5b5519b95620e35c9a21b4b92cb1244735"
+          }
+        },
+        {
+          "client_id": "887903848951-06bh06q1t9m1ht1d8867e23l4mso555r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEORSIm7c3tBB0Ujhr5elQFar8d9mgncI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887903848951-06bh06q1t9m1ht1d8867e23l4mso555r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

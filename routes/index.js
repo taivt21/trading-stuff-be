@@ -4,6 +4,7 @@ import postRoute from "./post.route.js";
 import commentRoute from "./comment.route.js";
 import favouriteRoute from "./favourite.route.js";
 import authRoute from "./auth.route.js";
+import invoiceRoute from "./invoice.route.js";
 import testRoute from "./test.route.js";
 
 const routes = express.Router();
@@ -12,6 +13,7 @@ routes.use("/user", userRoute);
 routes.use("/post", postRoute);
 routes.use("/comment", commentRoute);
 routes.use("/favourite", favouriteRoute);
+routes.use("/invoice", invoiceRoute);
 routes.use("/test", testRoute);
 
 routes.use("/auth", authRoute);
