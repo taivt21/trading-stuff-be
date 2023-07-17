@@ -4,31 +4,32 @@ https://trading-stuff-be-iphg.vercel.app/
 
 ## user
 
--GET user/
--GET user/me
--PUT user/edit
+-GET user?limit=?&page=?  
+-GET user/me  
+-PUT user/edit  
+-GET user/filter?gte={number}
 
 ## post
 
--GET post/
--POST post/create
--PATCH post/update/:id
--DELETE post//delete/:id
+-GET post/  
+-POST post/create  
+-PATCH post/update/:id  
+-DELETE post/delete/:id
 
 ## comment
 
--GET comment/
--POST comment/create
--PATCH comment/update/:id
+-GET comment/  
+-POST comment/create  
+-PATCH comment/update/:id  
 -DELETE comment/delete/:id
 
 ## favourite
 
--GET favorite/
--GET favorite/user
--GET favorite/post/:id
--POST favorite/create
--DELETE favorite/delete?:id
+-GET favorite/  
+-GET favorite/user  
+-GET favorite/post/:id  
+-POST favorite/create  
+-DELETE favorite/delete/:id
 
 ## auth
 

@@ -37,16 +37,19 @@ export const editUser = async (req, res) => {
 export const getUserInWithinDay = async (req, res) => {
   const { gte } = req.query;
 
-  console.log("file: user.controller.js:28 ~ getUserInMonth ~ day:", gte);
+  if (!gte)
+    res.status(400).json({
+      msg: "gte params can not be mpety",
+    });
 
-  const thirtyDaysAgo = new Date();
+  const date = new Date();
 
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - gte);
+  date.setDate(date.getDate() - gte);
 
   const users = await User.aggregate([
     {
       $match: {
-        createdAt: { $gte: thirtyDaysAgo },
+        createdAt: { $gte: date },
       },
     },
   ]);
