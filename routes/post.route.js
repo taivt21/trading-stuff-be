@@ -5,7 +5,7 @@ import {
   getAllPosts,
   updatePost,
 } from "../controller/post.controller.js";
-// const uploadImage = require("../middlewares/uploadImage.js");
+
 import { uploadImage } from "../middlewares/uploadImage.js";
 import { authenticate } from "../middlewares/authenticate.js";
 
