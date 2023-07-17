@@ -37,10 +37,12 @@ export const editUser = async (req, res) => {
 export const getUserInWithinDay = async (req, res) => {
   const { gte } = req.query;
 
-  if (!gte)
+  if (!gte) {
     res.status(400).json({
-      msg: "gte params can not be mpety",
+      msg: "gte params can not be empty",
     });
+    return;
+  }
 
   const date = new Date();
 

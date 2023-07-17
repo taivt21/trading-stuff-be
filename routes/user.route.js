@@ -16,6 +16,6 @@ userRoute.get("/me", authenticate, getProfile);
 
 userRoute.put("/edit", authenticate, editUser);
 
-userRoute.get("/filter", authenticate, isAdmin, getUserInWithinDay);
+userRoute.get("/statis", authenticate, isAdmin, getUserInWithinDay);
 
 export default userRoute;

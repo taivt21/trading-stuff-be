@@ -4,6 +4,7 @@ import {
   deletePost,
   getAllPosts,
   updatePost,
+  postWithinDay,
 } from "../controller/post.controller.js";
 
 import { uploadImage } from "../middlewares/uploadImage.js";
@@ -15,8 +16,10 @@ postRoute.get("/", getAllPosts);
 
 postRoute.post("/create", authenticate, uploadImage, createPost);
 
-postRoute.patch("/update/:id", updatePost);
+postRoute.patch("/update/:id", authenticate, updatePost);
 
-postRoute.delete("/delete/:id", deletePost);
+postRoute.delete("/delete/:id", authenticate, deletePost);
+
+postRoute.get("/statis", postWithinDay);
 
 export default postRoute;

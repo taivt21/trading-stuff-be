@@ -1,4 +1,5 @@
 import Posts from "../entities/post.js";
+
 export const createPost = async (req, res) => {
   try {
     const post = new Posts({
@@ -26,15 +27,28 @@ export const createPost = async (req, res) => {
 };
 
 export const getAllPosts = async (req, res) => {
+  const query = req.query;
+  console.log();
+
+  const limit = query.limit ?? {};
+
+  const page = query.page ?? {};
+
+  console.log(await Posts.count());
+
+  const skip = (await Posts.count()) - limit * page;
+
   try {
-    const posts = await Posts.find().populate("user");
+    const posts = await Posts.find({})
+      .populate("user", "-createdAt -updatedAt -__v -roleName")
+      .limit(limit)
+      .skip(skip);
 
     res.status(200).json({
       status: "Success",
       messages: "Get posts successfully from database!",
       data: { posts },
     });
-    // }
   } catch (err) {
     res.status(500).json({
       status: "Fail",
@@ -92,4 +106,33 @@ export const deletePost = async (req, res) => {
       error: error,
     });
   }
+};
+
+export const postWithinDay = async (req, res) => {
+  const { gte } = req.query;
+
+  if (!gte) {
+    res.status(400).json({
+      message: "gte params required",
+    });
+    return;
+  }
+
+  const date = new Date();
+
+  date.setDate(date.getDate() - gte);
+
+  const posts = await Posts.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: date,
+        },
+      },
+    },
+  ]);
+
+  res.status(200).send({
+    data: posts,
+  });
 };
