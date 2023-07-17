@@ -3,12 +3,8 @@ import "dotenv/config";
 import cors from "cors";
 import bodyParser from "body-parser";
 import routes from "./routes/index.js";
-import mongoose from "mongoose";
 
 const app = express();
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log("connect db successfully");
-});
 
 app.use(express.json());
 app.use(bodyParser.json());

@@ -19,10 +19,15 @@ const bucket = storage.bucket("noti-1620.appspot.com");
 // Khởi tạo middleware upload ảnh với Multer
 const upload = multer({
   storage: multer.memoryStorage(),
-  // limits: { fileSize: 1024 * 1024 * 5 }, // giới hạn kích thước file là 5MB
+  limits: { fileSize: 1024 * 1024 * 5 }, // giới hạn kích thước file là 5MB
   fileFilter: (req, file, cb) => {
     // Kiểm tra định dạng file
-    const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/jpg",
+    ];
     if (!allowedMimeTypes.includes(file.mimetype)) {
       const error = new Error("Invalid file type.");
       error.code = "INVALID_FILE_TYPE";

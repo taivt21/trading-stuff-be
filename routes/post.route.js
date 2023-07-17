@@ -5,6 +5,7 @@ import {
   getAllPosts,
   updatePost,
 } from "../controller/post.controller.js";
+
 import { uploadImage } from "../middlewares/uploadImage.js";
 import { authenticate } from "../middlewares/authenticate.js";
 

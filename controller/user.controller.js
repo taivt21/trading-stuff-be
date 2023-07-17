@@ -6,21 +6,21 @@ export const getUsers = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
-  const user = req.user;
+  const { id } = req.user;
+
+  const user = await User.findById(id);
+
   res.status(200).json(user);
 };
 
 export const editUser = async (req, res) => {
-  const { email } = req.user;
+  const { id } = req.user;
 
   const dto = req.body;
 
-  const updateUser = await User.findOneAndUpdate(
-    {
-      email: email,
-    },
-    { ...dto }
-  );
+  await User.findByIdAndUpdate(id, { ...dto });
 
-  res.status(200).json(updateUser);
+  res.status(200).json({
+    user: await User.findById(id),
+  });
 };
