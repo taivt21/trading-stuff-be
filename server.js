@@ -1,5 +1,4 @@
 import app from "./app.js";
-import morgan from "morgan";
 
 import mongoose from "mongoose";
 

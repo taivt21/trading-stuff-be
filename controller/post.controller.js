@@ -27,7 +27,7 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Posts.find();
+    const posts = await Posts.find().populate("user");
 
     res.status(200).json({
       status: "Success",
@@ -65,12 +65,12 @@ export const updatePost = async (req, res) => {
       post.point = req.body.point;
     }
     if (req.body.type) {
-      post.typePost = req.body.type;
+      post.type = req.body.type;
     }
 
-    const updatedPosting = await post.save();
+    const updatedPost = await post.save();
 
-    res.status(200).json({ message: "update success", data: updatedPosting });
+    res.status(200).json({ message: "update success", data: updatedPost });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -9,8 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Khởi tạo Storage của Firebase
 const storage = new Storage({
-  projectId: "auth-fhome",
-  keyFilename: path.join(__dirname, "../config/serviceAccount.json"),
+  projectId: "noti-1620",
+  keyFilename: path.join(__dirname, "../config/google-services.json"),
 });
 
 // Lấy reference đến bucket trong Firebase Storage
