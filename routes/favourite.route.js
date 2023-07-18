@@ -13,7 +13,7 @@ favouriteRoute.get("/", getFavourite);
 
 favouriteRoute.get("/me", authenticate, getFavouriteByUser);
 
-favouriteRoute.get("/post/:id", getFavouriteByPost);
+favouriteRoute.get("/post/:id", authenticate, getFavouriteByPost);
 
 favouriteRoute.post("/create", authenticate, createFavouritePost);
 

@@ -11,11 +11,19 @@ https://trading-stuff-be-iphg.vercel.app/
 
 ## post
 
+<<<<<<< HEAD
+-GET post/
+-POST post/create
+-PATCH post/update/:id
+-DELETE post/delete/:id
+-DELETE post/exchange/
+=======
 -GET post/  
 -POST post/create  
 -PATCH post/update/:id  
 -DELETE post/delete/:id  
 -GET post/statis?gte={number}
+>>>>>>> a2218d5f6fe945cb40ec17a3d6c259267c19b853
 
 ## comment
 
