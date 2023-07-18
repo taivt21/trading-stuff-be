@@ -11,7 +11,7 @@ const favouriteRoute = express.Router();
 
 favouriteRoute.get("/", getFavourite);
 
-favouriteRoute.get("/user", authenticate, getFavouriteByUser);
+favouriteRoute.get("/me", authenticate, getFavouriteByUser);
 
 favouriteRoute.get("/post/:id", authenticate, getFavouriteByPost);
 

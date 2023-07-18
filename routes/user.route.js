@@ -3,6 +3,7 @@ import {
   editUser,
   getProfile,
   getUsers,
+  getUserInWithinDay,
 } from "../controller/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
@@ -14,5 +15,7 @@ userRoute.get("/", authenticate, isAdmin, getUsers);
 userRoute.get("/me", authenticate, getProfile);
 
 userRoute.put("/edit", authenticate, editUser);
+
+userRoute.get("/statis", authenticate, isAdmin, getUserInWithinDay);
 
 export default userRoute;

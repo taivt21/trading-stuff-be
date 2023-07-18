@@ -2,11 +2,14 @@ import Favourite from "../entities/favourite.js";
 
 export const getFavourite = async (req, res) => {
   try {
-    const favourite = await Favourite.find().populate("user post");
+    const favourite = await Favourite.find().populate(
+      "user post",
+      "-createdAt -updatedAt -__v"
+    );
     res.status(200).json({
       status: "Success",
       messages: "Get favourite successfully!",
-      data: { favourite },
+      data: favourite,
     });
   } catch (err) {
     res.status(500).json({
@@ -17,14 +20,15 @@ export const getFavourite = async (req, res) => {
 };
 
 export const getFavouriteByUser = async (req, res) => {
+  const { id } = req.user;
+
   try {
-    const favourite = await Favourite.find({ user: req.user.id }).populate(
-      "user post"
-    );
+    const favourite = await Favourite.find({ user: id }).populate("user post");
+
     res.status(200).json({
       status: "Success",
       messages: "Get favourite by userId successfully!",
-      data: { favourite },
+      data: favourite,
     });
   } catch (err) {
     res.status(500).json({
@@ -36,13 +40,14 @@ export const getFavouriteByUser = async (req, res) => {
 
 export const getFavouriteByPost = async (req, res) => {
   try {
-    const favourite = await Favourite.find({ post: req.params.id }).populate(
-      "user post"
-    );
+    const favourite = await Favourite.find({ post: req.params.id })
+      .select("-__v")
+      .populate("user", "fullname")
+      .populate("post", " -__v -status");
     res.status(200).json({
       status: "Success",
       messages: "Get favourite by postId successfully!",
-      data: { favourite },
+      data: favourite,
     });
   } catch (err) {
     res.status(500).json({
@@ -91,6 +96,7 @@ export const createFavouritePost = async (req, res) => {
 
 export const deleteFavourite = async (req, res) => {
   const favouriteId = req.params.id;
+
   try {
     const favorite = await Favourite.findByIdAndDelete(favouriteId);
     if (!favorite) {

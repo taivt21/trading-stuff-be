@@ -14,7 +14,7 @@ const storage = new Storage({
 });
 
 // Lấy reference đến bucket trong Firebase Storage
-const bucket = storage.bucket("noti-1620.appspot.com");
+const bucket = storage.bucket("auth-fhome.appspot.com");
 
 // Khởi tạo middleware upload ảnh với Multer
 const upload = multer({

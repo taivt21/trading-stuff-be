@@ -3,7 +3,7 @@ import User from "../entities/user.js";
 
 const adminEmails = [
   "taivtse151030@fpt.edu.vn",
-  // "vinhthse151179@fpt.edu.vn",
+  "vinhthse151179@fpt.edu.vn",
   "thinhddse151086@fpt.edu.vn",
 ];
 
@@ -45,7 +45,7 @@ const login = async (req, res) => {
         img: userLogin.img,
         status: userLogin.status,
         roleName: userLogin.roleName,
-        point: userLogin.point
+        point: userLogin.point,
       };
 
       const accessToken = createAccessToken(payload);
@@ -88,7 +88,7 @@ const login = async (req, res) => {
           img: createdUser.img,
           status: createdUser.status,
           roleName: createdUser.roleName,
-          point: createdUser.point
+          point: createdUser.point,
         };
 
         const accessToken = createAccessToken(payload);
