@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
     point: { type: Number, default: 0 },
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
+    followedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
   },
   { timestamps: true }
 );
