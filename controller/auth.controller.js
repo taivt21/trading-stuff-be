@@ -46,6 +46,8 @@ const login = async (req, res) => {
         status: userLogin.status,
         roleName: userLogin.roleName,
         point: userLogin.point,
+        following: userLogin.following,
+        followedBy: userLogin.followedBy,
       };
 
       const accessToken = createAccessToken(payload);
@@ -89,6 +91,8 @@ const login = async (req, res) => {
           status: createdUser.status,
           roleName: createdUser.roleName,
           point: createdUser.point,
+          following: createdUser.following,
+          followedBy: createdUser.followedBy,
         };
 
         const accessToken = createAccessToken(payload);
