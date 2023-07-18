@@ -7,7 +7,6 @@ import authRoute from "./auth.route.js";
 import invoiceRoute from "./invoice.route.js";
 import reportRoute from "./report.route.js";
 import testRoute from "./test.route.js";
-import { authenticate } from "../middlewares/authenticate.js";
 
 const routes = express.Router();
 
@@ -16,12 +15,8 @@ routes.use("/post", postRoute);
 routes.use("/comment", commentRoute);
 routes.use("/favourite", favouriteRoute);
 routes.use("/invoice", invoiceRoute);
-
-routes.use("/test", authenticate, testRoute);
-
+routes.use("/test", testRoute);
 routes.use("/report", reportRoute);
-
-
 routes.use("/auth", authRoute);
 
 export default routes;
