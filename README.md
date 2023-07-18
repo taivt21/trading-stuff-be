@@ -27,7 +27,7 @@ https://trading-stuff-be-iphg.vercel.app/
 ## favourite
 
 -GET favorite/  
--GET favorite/user  
+-GET favorite/me  
 -GET favorite/post/:id  
 -POST favorite/create  
 -DELETE favorite/delete/:id
