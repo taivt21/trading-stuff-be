@@ -23,12 +23,13 @@ export const createReport = async (req, res) => {
       user: userId,
       post: postId,
     });
-
+    console.log(newReport);
     // Lưu báo cáo
     await newReport.save();
     //gửi mail
-    // Lấy thông tin người dùng đăng bài
-    const { email } = existingReport.user;
+    const user = await newReport.populate("user");
+    const { email } = user.user;
+    console.log(email);
     const reportReason = description;
     sendReportEmail(email, postId, reportReason);
     // Kiểm tra số lượng báo cáo cho bài đăng
@@ -43,7 +44,7 @@ export const createReport = async (req, res) => {
     }
     return res.status(201).json({ message: "Report successfully" });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -52,7 +53,7 @@ export const getAllReports = async (req, res) => {
     const reports = await Reports.find().populate("user");
     return res.status(200).json(reports);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -66,6 +67,6 @@ export const deleteReport = async (req, res) => {
 
     return res.status(200).json({ message: "Delete successfully." });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 };

@@ -103,7 +103,7 @@ export const deletePost = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({
-      error: error,
+      message: error.message,
     });
   }
 };
@@ -153,7 +153,7 @@ export const exchangeStuff = async (req, res) => {
       const email = userPost.email;
       sendExchangeInfoEmail(email, postId, message);
     } else {
-      return res.status(400).json({ message: "Error" });
+      return res.status(400).json({ message: "Error in exchange" });
     }
 
     // Cập nhật trạng thái bài đăng
@@ -162,7 +162,7 @@ export const exchangeStuff = async (req, res) => {
 
     return res.status(200).json({ message: "Exchange successfully." });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 };
 
