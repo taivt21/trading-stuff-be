@@ -13,7 +13,8 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET post/
 -POST post/create
 -PATCH post/update/:id
--DELETE post//delete/:id
+-DELETE post/delete/:id
+-DELETE post/exchange/
 
 ## comment
 

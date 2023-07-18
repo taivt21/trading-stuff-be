@@ -15,10 +15,10 @@ invoiceRouter.get("/", getInvoce);
 
 invoiceRouter.post("/create", authenticate, uploadImage, createInvoice);
 
-invoiceRouter.patch("/reject/:id", rejectedInvoice);
+invoiceRouter.patch("/reject/:id", authenticate, rejectedInvoice);
 
 invoiceRouter.patch("/approve/:id", authenticate, approvedInvoice);
 
-invoiceRouter.delete("/delete/:id", deleteInvoice);
+invoiceRouter.delete("/delete/:id", authenticate, deleteInvoice);
 
 export default invoiceRouter;

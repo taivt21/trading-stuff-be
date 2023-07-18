@@ -6,25 +6,17 @@ import {
   deleteFavourite,
   getFavouriteByPost,
 } from "../controller/favourite.controller.js";
-// const authenticate = require("../middlewares/authenticate");
+import { authenticate } from "../middlewares/authenticate.js";
 const favouriteRoute = express.Router();
 
 favouriteRoute.get("/", getFavourite);
 
-favouriteRoute.get(
-  "/user",
-  //  authenticate,
-  getFavouriteByUser
-);
+favouriteRoute.get("/user", authenticate, getFavouriteByUser);
 
-favouriteRoute.get("/post/:id", getFavouriteByPost);
+favouriteRoute.get("/post/:id", authenticate, getFavouriteByPost);
 
-favouriteRoute.post("/create", createFavouritePost);
+favouriteRoute.post("/create", authenticate, createFavouritePost);
 
-favouriteRoute.delete(
-  "/delete/:id",
-  //   authenticate,
-  deleteFavourite
-);
+favouriteRoute.delete("/delete/:id", authenticate, deleteFavourite);
 
 export default favouriteRoute;

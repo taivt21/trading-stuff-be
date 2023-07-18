@@ -5,15 +5,16 @@ import {
   getAllCommentByPost,
   updateComment,
 } from "../controller/comment.controller.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const commentRoute = express.Router();
 
 commentRoute.get("/", getAllCommentByPost);
 
-commentRoute.post("/create", createComment);
+commentRoute.post("/create", authenticate, createComment);
 
-commentRoute.patch("/update/:id", updateComment);
+commentRoute.patch("/update/:id", authenticate, updateComment);
 
-commentRoute.delete("/delete/:id", deleteComment);
+commentRoute.delete("/delete/:id", authenticate, deleteComment);
 
 export default commentRoute;

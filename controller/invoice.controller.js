@@ -1,5 +1,9 @@
 import Invoices from "../entities/invoice.js";
 import Users from "../entities/user.js";
+import {
+  sendRejectionEmail,
+  sendConfirmationEmail,
+} from "../config/sendmail.js";
 export const getInvoce = async (req, res) => {
   try {
     const invoice = await Invoices.find({}).populate("user");
@@ -55,12 +59,17 @@ export const createInvoice = async (req, res) => {
 };
 export const rejectedInvoice = async (req, res) => {
   try {
-    const invoice = await Invoices.findById(req.params.id);
+    const invoice = await Invoices.findById(req.params.id).populate("user");
     if (!invoice) {
       return res.status(404).json({ message: "invoice not found" });
     }
     invoice.status = "rejected";
-    await invoice.save(); // Lưu lại điểm đã chỉnh sửa
+    await invoice.save();
+
+    // Gửi email từ chối
+    const email = invoice.user.email;
+    const invoiceId = invoice._id;
+    sendRejectionEmail(email, invoiceId);
     res.status(200).json({ message: "invoice status updated to rejected" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -69,18 +78,23 @@ export const rejectedInvoice = async (req, res) => {
 
 export const approvedInvoice = async (req, res) => {
   try {
-    const invoice = await Invoices.findById(req.params.id);
+    const invoice = await Invoices.findById(req.params.id).populate("user");
     if (!invoice) {
       return res.status(404).json({ message: "invoice not found" });
     } else {
       const userId = req.user.id;
       const user = await Users.findOne({ id: userId });
       console.log(user);
-      user.point = user.point + invoice.point;
+      user.point += invoice.point;
       invoice.status = "approved";
 
       await user.save();
       await invoice.save();
+
+      // Gửi email xác nhận
+      const email = invoice.user.email;
+      const invoiceId = invoice._id;
+      sendConfirmationEmail(email, invoiceId);
       res.status(200).json({ message: "invoice status updated to approved" });
     }
   } catch (error) {
@@ -94,7 +108,7 @@ export const deleteInvoice = async (req, res) => {
     if (!invoice) {
       return res.status(404).json({ message: "invoice not found" });
     }
-    await invoice.remove(); // Remove the point from the database
+    await invoice.deleteOne; // Remove the point from the database
     res.status(200).json({ message: "invoice deleted successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });

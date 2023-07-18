@@ -4,8 +4,7 @@ export const createComment = async (req, res) => {
     const postComment = new Comments({
       description: req.body.description,
       user: req.user.id,
-      post: req.body.post,
-      img: req.body.img,
+      post: req.body.postId,
     });
 
     // Save the post to the database
@@ -45,25 +44,19 @@ export const getAllCommentByPost = async (req, res) => {
 
 export const updateComment = async (req, res) => {
   try {
-    const comment = await Comments.findById(req.params.id);
+    const comment = await Comments.findByIdAndUpdate(
+      req.params.id,
+      {
+        description: req.body.description,
+      },
+      { new: true }
+    );
+
     if (!comment) {
-      return res.status(404).json({ message: "comment not found" });
+      return res.status(404).json({ message: "Comment not found" });
     }
 
-    if (req.body.description) {
-      comment.description = req.body.description;
-    }
-
-    if (req.body.img) {
-      comment.img = req.body.img;
-    }
-    if (req.body.post) {
-      comment.post = req.body.post;
-    }
-
-    const updatedComment = await comment.save();
-
-    res.status(200).json({ message: "update success", data: updatedComment });
+    res.status(200).json({ message: "Update success", data: comment });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -75,7 +68,7 @@ export const deleteComment = async (req, res) => {
     if (!comment) {
       res.status(404).json({ message: "No posts found" });
     } else {
-      await comment.remove();
+      await comment.deleteOne;
       res.status(200).json({
         message: "delete comment success",
       });
