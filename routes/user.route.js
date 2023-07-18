@@ -17,7 +17,7 @@ const userRoute = express.Router();
 
 userRoute.get("/", authenticate, isAdmin, getUsers);
 
-userRoute.get("/:id", getUserById);
+userRoute.get("/info/:id", getUserById);
 
 userRoute.get("/me", authenticate, getProfile);
 

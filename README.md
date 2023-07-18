@@ -12,7 +12,7 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET user/me/followed_by  
 -DELETE user/follow/:id  
 -GET user/follow/:id
--GET user/:id
+-GET user/info/:id
 
 ## post
 
