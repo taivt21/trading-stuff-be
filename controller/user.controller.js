@@ -145,3 +145,20 @@ export const getFollowedUser = async (req, res) => {
     res.status(500).json({ success: false, error });
   }
 };
+
+export const getFollowingUser = async (req, res) => {
+  const { id } = req.user;
+
+  try {
+    const users = await User.findById(id)
+      .populate("following", "email fullname img")
+      .select("following");
+
+    res.status(200).json({
+      status: true,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({ status: false, error });
+  }
+};
