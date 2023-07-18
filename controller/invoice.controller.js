@@ -22,12 +22,11 @@ export const getInvoce = async (req, res) => {
 export const createInvoice = async (req, res) => {
   try {
     const userId = req.user.id;
-    const pointId = req.body.point;
+    const point = req.body.point;
     const img = req.body.img;
 
     const existingInvoice = await Invoices.findOne({
       user: userId,
-      point: pointId,
       status: "pending",
     });
     if (existingInvoice) {
@@ -39,8 +38,8 @@ export const createInvoice = async (req, res) => {
 
     const invoice = new Invoices({
       user: userId,
-      point: pointId,
-      img: img,
+      point,
+      img,
     });
 
     await invoice.save();
@@ -68,7 +67,7 @@ export const rejectedInvoice = async (req, res) => {
 
     // Gửi email từ chối
     const email = invoice.user.email;
-    const invoiceId = invoice._id;
+    const invoiceId = invoice.id;
     sendRejectionEmail(email, invoiceId);
     res.status(200).json({ message: "invoice status updated to rejected" });
   } catch (error) {
@@ -82,18 +81,18 @@ export const approvedInvoice = async (req, res) => {
     if (!invoice) {
       return res.status(404).json({ message: "invoice not found" });
     } else {
-      const userId = req.user.id;
-      const user = await Users.findOne({ id: userId });
+      const userId = invoice.user.id;
+      const user = await Users.findOne({ _id: userId });
       console.log(user);
       user.point += invoice.point;
       invoice.status = "approved";
-
+      console.log(invoice);
       await user.save();
       await invoice.save();
 
       // Gửi email xác nhận
       const email = invoice.user.email;
-      const invoiceId = invoice._id;
+      const invoiceId = invoice.id;
       sendConfirmationEmail(email, invoiceId);
       res.status(200).json({ message: "invoice status updated to approved" });
     }
