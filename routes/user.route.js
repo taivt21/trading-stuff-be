@@ -8,6 +8,7 @@ import {
   getFollowedUser,
   unfollowUser,
   getFollowingUser,
+  getUserById,
 } from "../controller/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
@@ -15,6 +16,8 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 const userRoute = express.Router();
 
 userRoute.get("/", authenticate, isAdmin, getUsers);
+
+userRoute.get("/:id", getUserById);
 
 userRoute.get("/me", authenticate, getProfile);
 

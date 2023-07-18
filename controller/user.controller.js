@@ -162,3 +162,19 @@ export const getFollowingUser = async (req, res) => {
     res.status(500).json({ status: false, error });
   }
 };
+
+export const getUserById = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const user = await User.findById(id)
+      .populate()
+      .select("-point -createdAt -updatedAt -__v -role -status");
+
+    res.status(200).json({
+      status: true,
+      data: user,
+    });
+    res.status(500).json({ status: false, error });
+  } catch (error) {}
+};
