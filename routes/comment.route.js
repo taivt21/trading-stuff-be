@@ -4,12 +4,15 @@ import {
   deleteComment,
   getAllCommentByPost,
   updateComment,
+  getAllComment,
 } from "../controller/comment.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 
 const commentRoute = express.Router();
 
-commentRoute.get("/", getAllCommentByPost);
+commentRoute.get("/:id", getAllCommentByPost);
+
+commentRoute.get("/", getAllComment);
 
 commentRoute.post("/create", authenticate, createComment);
 

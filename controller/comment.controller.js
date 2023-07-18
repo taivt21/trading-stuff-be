@@ -41,6 +41,21 @@ export const getAllCommentByPost = async (req, res) => {
     });
   }
 };
+export const getAllComment = async (req, res) => {
+  try {
+    const postingComments = await Comments.find().populate("post user");
+    res.status(200).json({
+      status: "Success",
+      messages: "Get postings successfully!",
+      data: { postingComments },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "Fail",
+      messages: err.message,
+    });
+  }
+};
 
 export const updateComment = async (req, res) => {
   try {
