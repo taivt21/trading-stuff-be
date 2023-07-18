@@ -7,6 +7,7 @@ import {
   followingUser,
   getFollowedUser,
   unfollowUser,
+  getFollowingUser,
 } from "../controller/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
@@ -23,7 +24,9 @@ userRoute.get("/statis", authenticate, isAdmin, getUserInWithinDay);
 
 userRoute.get("/follow/:userId", authenticate, followingUser);
 
-userRoute.get("/me/follow", authenticate, getFollowedUser);
+userRoute.get("/me/followed_by", authenticate, getFollowedUser);
+
+userRoute.get("/me/following", authenticate, getFollowingUser);
 
 userRoute.delete("/follow/:userId", authenticate, unfollowUser);
 

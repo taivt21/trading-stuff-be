@@ -7,23 +7,26 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET user?limit=?&page=?  
 -GET user/me  
 -PUT user/edit  
--GET user/filter?gte={number}
+-GET user/filter?gte={number}  
+-GET user/me/following  
+-GET user/me/followed_by  
+-DELETE user/follow/:id  
+-GET user/follow/:id
 
 ## post
 
 -GET post/
--POST post/create 
+-POST post/create
 -PATCH post/update/:id
 -DELETE post/delete/:id
 -DELETE post/exchange/
 -GET post/statis?gte={number}
 
-
 ## comment
 
 -GET comment/  
--POST comment/create  (body: description, postId)
--PATCH comment/update/:id  (body: description)
+-POST comment/create (body: description, postId)
+-PATCH comment/update/:id (body: description)
 -DELETE comment/delete/:id
 
 ## favourite
@@ -31,7 +34,7 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET favorite/  
 -GET favorite/me  
 -GET favorite/post/:id  
--POST favorite/create (body: postId) 
+-POST favorite/create (body: postId)
 -DELETE favorite/delete/:id
 
 ## auth
@@ -41,13 +44,13 @@ https://trading-stuff-be-iphg.vercel.app/
 #invoice
 
 -GET invoice/  
--POST invoice/create  (body: point, img)
--PATCH invoice/reject/:id 
--PATCH invoice/approve/:id 
+-POST invoice/create (body: point, img)
+-PATCH invoice/reject/:id
+-PATCH invoice/approve/:id
 -DELETE invoice/delete/:id
 
 ## report
 
 -GET report/  
--POST report/create  (body: description, postId)
+-POST report/create (body: description, postId)
 -DELETE report/delete/:id
