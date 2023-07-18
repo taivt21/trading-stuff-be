@@ -20,7 +20,7 @@ postRoute.get("/:id", getPostById);
 
 postRoute.post("/create", authenticate, uploadImage, createPost);
 
-postRoute.patch("/update/:id", authenticate, authenticate, updatePost);
+postRoute.patch("/update/:id", authenticate, uploadImage, updatePost);
 
 postRoute.delete("/delete/:id", authenticate, deletePost);
 

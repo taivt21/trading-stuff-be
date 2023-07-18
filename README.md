@@ -11,25 +11,19 @@ https://trading-stuff-be-iphg.vercel.app/
 
 ## post
 
-<<<<<<< HEAD
 -GET post/
--POST post/create
+-POST post/create 
 -PATCH post/update/:id
 -DELETE post/delete/:id
 -DELETE post/exchange/
-=======
--GET post/  
--POST post/create  
--PATCH post/update/:id  
--DELETE post/delete/:id  
 -GET post/statis?gte={number}
->>>>>>> a2218d5f6fe945cb40ec17a3d6c259267c19b853
+
 
 ## comment
 
 -GET comment/  
--POST comment/create  
--PATCH comment/update/:id  
+-POST comment/create  (body: description, postId)
+-PATCH comment/update/:id  (body: description)
 -DELETE comment/delete/:id
 
 ## favourite
@@ -37,9 +31,23 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET favorite/  
 -GET favorite/me  
 -GET favorite/post/:id  
--POST favorite/create  
+-POST favorite/create (body: postId) 
 -DELETE favorite/delete/:id
 
 ## auth
 
 -POST auth/login
+
+#invoice
+
+-GET invoice/  
+-POST invoice/create  (body: point, img)
+-PATCH invoice/reject/:id 
+-PATCH invoice/approve/:id 
+-DELETE invoice/delete/:id
+
+## report
+
+-GET report/  
+-POST report/create  (body: description, postId)
+-DELETE report/delete/:id
