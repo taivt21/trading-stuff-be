@@ -178,3 +178,23 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ status: false, error });
   } catch (error) {}
 };
+
+export const banUser = async (req, res) => {
+  const id = req.params.id;
+  console.log("file: user.controller.js:184 ~ banUser ~ id:", id);
+
+  const check = await User.findById(id);
+  if (check.status === false) {
+    return res.status(400).json({
+      msg: "User is already banned",
+    });
+  }
+
+  await User.findByIdAndUpdate(id, {
+    status: false,
+  });
+
+  return res.status(200).json({
+    msg: "update status success",
+  });
+};

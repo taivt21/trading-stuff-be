@@ -36,6 +36,12 @@ const login = async (req, res) => {
       status: true,
     });
 
+    if (!userLogin) {
+      return res.status(400).json({
+        message: "User is banned, contact the administrator",
+      });
+    }
+
     if (userLogin) {
       const payload = {
         id: userLogin.id,
