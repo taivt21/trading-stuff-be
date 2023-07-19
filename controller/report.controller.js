@@ -70,3 +70,16 @@ export const deleteReport = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const updateReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+
+    // Xóa báo cáo
+    await Reports.findByIdAndUpdate(reportId, { status: true });
+
+    return res.status(200).json({ message: "Update successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
