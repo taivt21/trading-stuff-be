@@ -10,6 +10,7 @@ import {
   getFollowingUser,
   getUserById,
   banUser,
+  unbanUser,
 } from "../controller/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
@@ -35,5 +36,7 @@ userRoute.get("/me/following", authenticate, getFollowingUser);
 userRoute.delete("/follow/:userId", authenticate, unfollowUser);
 
 userRoute.get("/ban/:id", authenticate, isAdmin, banUser);
+
+userRoute.get("/unban/:id", authenticate, isAdmin, unbanUser);
 
 export default userRoute;

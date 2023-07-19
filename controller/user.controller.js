@@ -198,3 +198,21 @@ export const banUser = async (req, res) => {
     msg: "update status success",
   });
 };
+export const unbanUser = async (req, res) => {
+  const id = req.params.id;
+
+  const check = await User.findById(id);
+  if (check.status === true) {
+    return res.status(400).json({
+      msg: "User is already unbanned",
+    });
+  }
+
+  await User.findByIdAndUpdate(id, {
+    status: true,
+  });
+
+  return res.status(200).json({
+    msg: "update status success",
+  });
+};
