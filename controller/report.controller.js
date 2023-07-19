@@ -34,11 +34,11 @@ export const createReport = async (req, res) => {
     sendReportEmail(email, postId, reportReason);
     // Kiểm tra số lượng báo cáo cho bài đăng
     const reportCount = await Reports.countDocuments({ post: postId });
-    if (reportCount >= 5) {
-      // Nếu số lượng báo cáo đạt đến 5, cập nhật trạng thái và ẩn bài đăng
+    if (reportCount >= 2) {
+      // Nếu số lượng báo cáo đạt đến 2, cập nhật trạng thái và ẩn bài đăng
       const post = await Posts.findById(postId);
       if (post) {
-        post.status = "hidden";
+        post.status = "limited";
         await post.save();
       }
     }
@@ -50,7 +50,7 @@ export const createReport = async (req, res) => {
 
 export const getAllReports = async (req, res) => {
   try {
-    const reports = await Reports.find().populate("user");
+    const reports = await Reports.find().populate("user post");
     return res.status(200).json(reports);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -66,6 +66,19 @@ export const deleteReport = async (req, res) => {
     await Reports.findByIdAndDelete(reportId);
 
     return res.status(200).json({ message: "Delete successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+
+    // Xóa báo cáo
+    await Reports.findByIdAndUpdate(reportId, { status: true });
+
+    return res.status(200).json({ message: "Update successfully." });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
