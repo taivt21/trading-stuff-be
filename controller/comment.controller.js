@@ -1,11 +1,12 @@
 import Comments from "../entities/comment.js";
 import User from "../entities/user.js";
 import Transactions from "../entities/transaction.js";
-import { TRANSACTION_TYPE } from "../types/type.js";
+import { TRANSACTION_TYPE, TRANSACTION_CATEGORY } from "../types/type.js";
+
+const COMMENT_POINT = 2;
 
 export const createComment = async (req, res) => {
   try {
-    const POINT = 2;
     const id = req.user.id;
 
     if (
@@ -17,17 +18,10 @@ export const createComment = async (req, res) => {
       });
     }
 
-    const check = await Comments.findOne({
+    const listComment = await Comments.find({
       post: req.body.postId,
       user: id,
     });
-
-    if (check) {
-      return res.status(400).json({
-        status: false,
-        message: "you can only have 1 comment per post",
-      });
-    }
 
     const postComment = new Comments({
       description: req.body.description,
@@ -35,18 +29,22 @@ export const createComment = async (req, res) => {
       post: req.body.postId,
     });
 
-    //add point to user
-    await User.findByIdAndUpdate(id, {
-      $inc: { point: POINT },
-    });
+    if (listComment <= 0) {
+      await Transactions.create({
+        userId: id,
+        transaction_type: TRANSACTION_TYPE.RECEIVE,
+        point: COMMENT_POINT,
+        transaction_category: TRANSACTION_CATEGORY.COMMENT,
+        status: "success",
+        comment_id: postComment._id,
+      });
 
-    await Transactions.create({
-      userId: id,
-      transaction_type: TRANSACTION_TYPE.RECEIVE,
-      point: POINT,
-    });
+      //add point to user
+      await User.findByIdAndUpdate(id, {
+        $inc: { point: COMMENT_POINT },
+      });
+    }
 
-    // Save the post to the database
     await postComment.save();
 
     res.status(201).json({
@@ -120,6 +118,7 @@ export const updateComment = async (req, res) => {
 export const deleteComment = async (req, res) => {
   try {
     const comment = await Comments.findById(req.params.id);
+
     if (!comment) {
       res.status(404).json({ message: "No posts found" });
     } else {
@@ -128,6 +127,7 @@ export const deleteComment = async (req, res) => {
       await Transactions.findOneAndUpdate(
         {
           userId: req.user.id,
+          comment_id: req.params.id,
         },
         {
           transaction_type: TRANSACTION_TYPE.TERMINATE,
@@ -136,7 +136,7 @@ export const deleteComment = async (req, res) => {
 
       await User.findByIdAndUpdate(req.user.id, {
         $inc: {
-          point: -2,
+          point: -COMMENT_POINT,
         },
       });
 

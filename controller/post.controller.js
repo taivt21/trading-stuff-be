@@ -2,7 +2,7 @@ import Posts from "../entities/post.js";
 import Users from "../entities/user.js";
 import Transactions from "../entities/transaction.js";
 import { sendExchangeInfoEmail } from "../config/sendmail.js";
-import { TRANSACTION_TYPE } from "../types/type.js";
+import { TRANSACTION_CATEGORY, TRANSACTION_TYPE } from "../types/type.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -21,6 +21,8 @@ export const createPost = async (req, res) => {
       id: req.user.id,
       point: req.body.point,
       transaction_type: req.body.type,
+      transaction_category: "post",
+      post: post._id,
     });
 
     res.status(201).json({
@@ -120,8 +122,7 @@ export const deletePost = async (req, res) => {
 
 export const exchangeStuff = async (req, res) => {
   try {
-    const postId = req.body.id;
-    const message = req.body.message;
+    const { postId, message } = req.body;
 
     const post = await Posts.findById(postId).populate("user");
 
@@ -139,18 +140,20 @@ export const exchangeStuff = async (req, res) => {
         return res.status(400).json({ message: "Dont enought point" });
       }
       // Trừ điểm của người dùng
-      user.point -= post.point;
+      // user.point -= post.point;
 
       // Cộng điểm cho người đăng
-      const userPost = post.user;
-      userPost.point += post.point;
-      await userPost.save();
-      await user.save();
+      // const userPost = post.user;
+      // userPost.point += post.point;
+      // await userPost.save();
+      // await user.save();
 
       await Transactions.create({
-        user: req.user.id,
+        userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.GIVE,
         point: post.point,
+        post: postId,
+        transaction_category: TRANSACTION_CATEGORY.POST,
       });
 
       //gửi mail
@@ -158,18 +161,20 @@ export const exchangeStuff = async (req, res) => {
       sendExchangeInfoEmail(email, postId, message);
     } else if (post.typePost === "receive") {
       // Cộng điểm của người dùng
-      user.point += post.point;
+      // user.point += post.point;
 
       //Trừ điểm người đăng
-      const userPost = post.user;
-      userPost.point -= post.point;
-      await userPost.save();
-      await user.save();
+      // const userPost = post.user;
+      // userPost.point -= post.point;
+      // await userPost.save();
+      // await user.save();
 
       await Transactions.create({
-        user: req.user.id,
+        userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.RECEIVE,
         point: post.point,
+        post: postId,
+        transaction_category: TRANSACTION_CATEGORY.POST,
       });
 
       //gửi mail

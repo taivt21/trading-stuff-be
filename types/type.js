@@ -4,3 +4,8 @@ export const TRANSACTION_TYPE = {
   PAID: "paid",
   TERMINATE: "terminate",
 };
+export const TRANSACTION_CATEGORY = {
+  POST: "post",
+  COMMENT: "comment",
+  AUCTION: "auction",
+};

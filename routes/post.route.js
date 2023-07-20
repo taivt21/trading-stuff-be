@@ -25,6 +25,7 @@ postRoute.patch("/update/:id", authenticate, uploadImage, updatePost);
 postRoute.delete("/delete/:id", authenticate, deletePost);
 
 postRoute.post("/exchange", authenticate, exchangeStuff);
+
 postRoute.get("/statis", postWithinDay);
 
 export default postRoute;
