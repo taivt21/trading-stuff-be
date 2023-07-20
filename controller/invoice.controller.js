@@ -1,12 +1,17 @@
 import Invoices from "../entities/invoice.js";
 import Users from "../entities/user.js";
+import Transactions from "../entities/transaction.js";
+import { TRANSACTION_TYPE } from "../types/type.js";
+
 import {
   sendRejectionEmail,
   sendConfirmationEmail,
 } from "../config/sendmail.js";
+
 export const getInvoce = async (req, res) => {
   try {
     const invoice = await Invoices.find({}).populate("user");
+
     res.status(200).json({
       status: "Success",
       messages: "Get invoice successfully!",
@@ -83,12 +88,19 @@ export const approvedInvoice = async (req, res) => {
     } else {
       const userId = invoice.user.id;
       const user = await Users.findOne({ _id: userId });
-      console.log(user);
+      // console.log(user);
       user.point += invoice.point;
       invoice.status = "approved";
-      console.log(invoice);
+      // console.log(invoice);
       await user.save();
+
       await invoice.save();
+
+      await Transactions.create({
+        userId: userId,
+        transaction_type: TRANSACTION_TYPE.PAID,
+        point: invoice.point,
+      });
 
       // Gửi email xác nhận
       const email = invoice.user.email;
