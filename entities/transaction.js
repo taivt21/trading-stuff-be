@@ -9,11 +9,11 @@ const transactionSchema = new mongoose.Schema(
     },
     transaction_type: {
       type: String,
-      enum: ["give", "receive", "paid", "terminate"],
+      enum: ["give", "receive", "paid", "terminate", "auction"],
     },
     transaction_category: {
       type: String,
-      enum: ["comment", "post", "auction"],
+      enum: ["comment", "post"],
     },
     point: {
       type: Number,

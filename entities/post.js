@@ -12,7 +12,10 @@ const postSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     img: { type: String },
     point: { type: Number },
-    typePost: { type: String, enum: ["receive", "give"] },
+    typePost: { type: String, enum: ["receive", "give", "auction"] },
+    minPoint: { type: Number },
+    bidStep: { type: Number },
+    offer: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

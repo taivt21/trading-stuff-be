@@ -3,33 +3,65 @@ import Users from "../entities/user.js";
 import Transactions from "../entities/transaction.js";
 import { sendExchangeInfoEmail } from "../config/sendmail.js";
 import { TRANSACTION_CATEGORY, TRANSACTION_TYPE } from "../types/type.js";
+import Auctions from "../entities/auction.js";
 
 export const createPost = async (req, res) => {
   try {
-    const post = new Posts({
-      title: req.body.title,
-      description: req.body.description,
-      user: req.user.id,
-      img: req.body.img,
-      point: req.body.point,
-      typePost: req.body.type,
-    });
+    const typePost = req.body.type;
+    if (typePost !== "auction") {
+      // Nếu typePost không phải là "auction", tạo bài đăng thông thường
+      const post = new Posts({
+        ...req.body,
+        user: req.user.id,
+        typePost,
+      });
+      await post.save();
+      // Tạo transaction liên quan đến bài đăng
+      await Transactions.create({
+        id: req.user.id,
+        point: req.body.point,
+        transaction_type: typePost,
+        transaction_category: "post",
+        post: post._id,
+      });
+      res.status(201).json({
+        status: "Success",
+        messages: "Post created successfully!",
+        data: { post },
+      });
+    } else {
+      // Nếu typePost là "auction", tạo bài đăng và phiên đấu giá
+      const post = new Posts({
+        ...req.body,
+        user: req.user.id,
+        typePost,
+      });
+      await post.save();
 
-    await post.save();
+      // Tạo phiên đấu giá
+      const newAuction = new Auctions({
+        postId: post._id,
+        minPoint: req.body.minPoint,
+        bidStep: req.body.bidStep,
+        bidders: [],
+      });
+      await newAuction.save();
 
-    await Transactions.create({
-      id: req.user.id,
-      point: req.body.point,
-      transaction_type: req.body.type,
-      transaction_category: "post",
-      post: post._id,
-    });
+      // Tạo transaction liên quan đến bài đăng
+      await Transactions.create({
+        id: req.user.id,
+        point: req.body.point,
+        transaction_type: typePost,
+        transaction_category: "post",
+        post: post._id,
+      });
 
-    res.status(201).json({
-      status: "Success",
-      messages: "Post created successfully!",
-      data: { post },
-    });
+      res.status(201).json({
+        status: "Success",
+        messages: "Auction created successfully!",
+        data: { post },
+      });
+    }
   } catch (err) {
     res.status(500).json({
       status: "Fail",
