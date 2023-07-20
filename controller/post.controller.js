@@ -21,7 +21,7 @@ export const createPost = async (req, res) => {
         id: req.user.id,
         point: req.body.point,
         transaction_type: typePost,
-        transaction_category: "post",
+        transaction_category: TRANSACTION_CATEGORY.POST,
         post: post._id,
       });
       res.status(201).json({
@@ -140,7 +140,7 @@ export const deletePost = async (req, res) => {
     if (!post) {
       res.status(404).json({ message: "No posts found" });
     } else {
-      await post.deleteOne;
+      await post.deleteOne();
       res.status(200).json({
         message: "delete post success",
       });
@@ -171,14 +171,6 @@ export const exchangeStuff = async (req, res) => {
       if (user.point < post.point) {
         return res.status(400).json({ message: "Dont enought point" });
       }
-      // Trừ điểm của người dùng
-      // user.point -= post.point;
-
-      // Cộng điểm cho người đăng
-      // const userPost = post.user;
-      // userPost.point += post.point;
-      // await userPost.save();
-      // await user.save();
 
       await Transactions.create({
         userId: req.user.id,
@@ -192,15 +184,6 @@ export const exchangeStuff = async (req, res) => {
       const email = userPost.email;
       sendExchangeInfoEmail(email, postId, message);
     } else if (post.typePost === "receive") {
-      // Cộng điểm của người dùng
-      // user.point += post.point;
-
-      //Trừ điểm người đăng
-      // const userPost = post.user;
-      // userPost.point -= post.point;
-      // await userPost.save();
-      // await user.save();
-
       await Transactions.create({
         userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.RECEIVE,
