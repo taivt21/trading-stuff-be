@@ -59,4 +59,6 @@ https://trading-stuff-be-iphg.vercel.app/
 ## transaction
 
 -GET transaction/me  
--GET transcation/users/:id
+-GET transcation/users/:id  
+-PUT transaction/confirm/:id  
+-PUT transaction/reject/:id

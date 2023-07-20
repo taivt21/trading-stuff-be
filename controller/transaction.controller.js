@@ -1,6 +1,7 @@
 import Transactions from "../entities/transaction.js";
 import User from "../entities/user.js";
 import { TRANSACTION_TYPE } from "../types/type.js";
+import Posts from "../entities/post.js";
 
 export const getUserTransaction = async (req, res) => {
   const transactions = await Transactions.find({
@@ -35,10 +36,7 @@ export const getTransactionByUserId = async (req, res) => {
 export const confirmTransaction = async (req, res) => {
   const id = req.user.id;
 
-  const transaction = await Transactions.findOne({
-    userId: id,
-    post: req.params.id,
-  }).populate("Posts Comments");
+  const transaction = await Transactions.findById(req.params.id);
 
   if (!transaction)
     return res.status(400).json({
@@ -47,10 +45,10 @@ export const confirmTransaction = async (req, res) => {
     });
 
   await transaction.updateOne({
-    status: true,
+    status: "success",
   });
 
-  if (transaction.transaction_type === TRANSACTION_TYPE.RECEIVE) {
+  if (transaction.transaction_type === TRANSACTION_TYPE.GIVE) {
     //currentUser
     await User.findByIdAndUpdate(id, {
       $inc: {
@@ -64,7 +62,7 @@ export const confirmTransaction = async (req, res) => {
       },
     });
   }
-  if (transaction.transaction_type === TRANSACTION_TYPE.GIVE) {
+  if (transaction.transaction_type === TRANSACTION_TYPE.RECEIVE) {
     //currentUser
     await User.findByIdAndUpdate(id, {
       $inc: {
@@ -85,15 +83,14 @@ export const confirmTransaction = async (req, res) => {
   });
 };
 export const rejectTransaction = async (req, res) => {
-  const id = req.user.id;
+  const transaction = await Transactions.findByIdAndUpdate(req.params.id, {
+    status: "failure",
+    transaction_type: "terminate",
+  });
 
-  await Transactions.findOneAndUpdate(
-    {
-      userId: id,
-      post: req.params.id,
-    },
-    {}
-  );
+  await Posts.findByIdAndUpdate(transaction.post, {
+    status: "published",
+  });
 
   res.status(204).json({
     status: true,

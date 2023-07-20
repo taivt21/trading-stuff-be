@@ -210,7 +210,7 @@ export const exchangeStuff = async (req, res) => {
       });
 
       //gửi mail
-      const email = userPost.email;
+      const email = post.user.email;
       sendExchangeInfoEmail(email, postId, message);
     } else {
       return res.status(400).json({ message: "Error in exchange" });
