@@ -80,6 +80,7 @@ export const getAllCommentByPost = async (req, res) => {
     });
   }
 };
+
 export const getAllComment = async (req, res) => {
   try {
     const postingComments = await Comments.find().populate("post user");
@@ -122,7 +123,23 @@ export const deleteComment = async (req, res) => {
     if (!comment) {
       res.status(404).json({ message: "No posts found" });
     } else {
-      await comment.deleteOne;
+      await comment.deleteOne();
+
+      await Transactions.findOneAndUpdate(
+        {
+          userId: req.user.id,
+        },
+        {
+          transaction_type: TRANSACTION_TYPE.TERMINATE,
+        }
+      );
+
+      await User.findByIdAndUpdate(req.user.id, {
+        $inc: {
+          point: -2,
+        },
+      });
+
       res.status(200).json({
         message: "delete comment success",
       });
