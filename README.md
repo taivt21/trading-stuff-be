@@ -55,3 +55,8 @@ https://trading-stuff-be-iphg.vercel.app/
 -GET report/  
 -POST report/create (body: description, postId)
 -DELETE report/delete/:id
+
+## transaction
+
+-GET transaction/me  
+-GET transcation/users/:id
