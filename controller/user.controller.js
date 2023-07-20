@@ -19,9 +19,9 @@ export const getUsers = async (req, res) => {
 export const getProfile = async (req, res) => {
   const { id } = req.user;
 
-  const user = await User.findById(id);
-  // .populate("followedBy")
-  // .populate("following");
+  const user = await User.findById(id)
+    .populate("followedBy", "email phoneNumber img fullname")
+    .populate("following", "email phoneNumber img fullname");
 
   res.status(200).json(user);
 };

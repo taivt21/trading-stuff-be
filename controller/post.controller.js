@@ -1,6 +1,9 @@
 import Posts from "../entities/post.js";
 import Users from "../entities/user.js";
+import Transactions from "../entities/transaction.js";
 import { sendExchangeInfoEmail } from "../config/sendmail.js";
+import { TRANSACTION_TYPE } from "../types/type.js";
+
 export const createPost = async (req, res) => {
   try {
     const post = new Posts({
@@ -13,6 +16,12 @@ export const createPost = async (req, res) => {
     });
 
     await post.save();
+
+    await Transactions.create({
+      id: req.user.id,
+      point: req.body.point,
+      transaction_type: req.body.type,
+    });
 
     res.status(201).json({
       status: "Success",
@@ -57,6 +66,7 @@ export const getAllPosts = async (req, res) => {
     });
   }
 };
+
 export const getPostById = async (req, res) => {
   try {
     const posts = await Posts.findById(req.params.id).populate("user");
@@ -120,6 +130,7 @@ export const exchangeStuff = async (req, res) => {
     }
 
     const userId = req.user.id;
+    //current user
     const user = await Users.findById(userId);
 
     // Kiểm tra loại bài đăng
@@ -136,6 +147,12 @@ export const exchangeStuff = async (req, res) => {
       await userPost.save();
       await user.save();
 
+      await Transactions.create({
+        user: req.user.id,
+        transaction_type: TRANSACTION_TYPE.GIVE,
+        point: post.point,
+      });
+
       //gửi mail
       const email = userPost.email;
       sendExchangeInfoEmail(email, postId, message);
@@ -148,6 +165,12 @@ export const exchangeStuff = async (req, res) => {
       userPost.point -= post.point;
       await userPost.save();
       await user.save();
+
+      await Transactions.create({
+        user: req.user.id,
+        transaction_type: TRANSACTION_TYPE.RECEIVE,
+        point: post.point,
+      });
 
       //gửi mail
       const email = userPost.email;
