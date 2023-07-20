@@ -21,7 +21,7 @@ export const createPost = async (req, res) => {
       id: req.user.id,
       point: req.body.point,
       transaction_type: req.body.type,
-      transaction_category: "post",
+      transaction_category: TRANSACTION_CATEGORY.POST,
       post: post._id,
     });
 
@@ -178,7 +178,7 @@ export const exchangeStuff = async (req, res) => {
       });
 
       //gửi mail
-      const email = userPost.email;
+      const email = post.user.email;
       sendExchangeInfoEmail(email, postId, message);
     } else {
       return res.status(400).json({ message: "Error in exchange" });

@@ -5,6 +5,7 @@ import {
   confirmTransaction,
   getTransactionByUserId,
   getUserTransaction,
+  rejectTransaction,
 } from "../controller/transaction.controller.js";
 
 const transactionRoute = express.Router();
@@ -19,5 +20,6 @@ transactionRoute.get(
 );
 
 transactionRoute.put("/confirm/:id", authenticate, confirmTransaction);
+transactionRoute.put("/reject/:id", authenticate, rejectTransaction);
 
 export default transactionRoute;
