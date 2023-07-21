@@ -1,5 +1,6 @@
 import Auction from "../entities/auction.js";
 import Posts from "../entities/post.js";
+import Transactions from "../entities/transaction.js";
 import Users from "../entities/user.js";
 import mongoose from "mongoose";
 
@@ -201,6 +202,7 @@ const getAuctionByPostId = async (req, res) => {
     res.status(500).json({ error: "Đã xảy ra lỗi khi tìm auctions" });
   }
 };
+
 export {
   placeBid,
   deleteHighestBidder,

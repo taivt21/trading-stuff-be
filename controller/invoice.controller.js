@@ -120,7 +120,7 @@ export const deleteInvoice = async (req, res) => {
     if (!invoice) {
       return res.status(404).json({ message: "invoice not found" });
     }
-    await invoice.deleteOne; // Remove the point from the database
+    await invoice.deleteOne(); // Remove the point from the database
     res.status(200).json({ message: "invoice deleted successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
