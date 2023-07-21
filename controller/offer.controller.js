@@ -19,6 +19,26 @@ export const createOffer = async (req, res, next) => {
     });
   }
 
+  const checkOffer = await Offer.find({
+    post_id: postId,
+    user_id: userId,
+  });
+
+  if (checkOffer) {
+    await Offer.findOneAndUpdate(
+      {
+        post_id: postId,
+        user_id: userId,
+      },
+      {
+        point: point,
+      }
+    );
+    return res.status(200).json({
+      message: "Offer updated successfully",
+    });
+  }
+
   const newOffer = new Offer({
     user_id: userId,
     post_id: postId,
@@ -31,6 +51,27 @@ export const createOffer = async (req, res, next) => {
     message: "create offer successfully",
     data: newOffer,
   });
+};
+
+export const editOffer = async (req, res) => {
+  const offerId = req.params.id;
+
+  const offer = await Offer.findById(offerId);
+
+  const { point } = req.body;
+
+  if (!offer)
+    return res.status(404).json({
+      message: "offer not found",
+    });
+
+  offer.updateOne({
+    point: point,
+  });
+
+  offer.save();
+
+  res.status(204);
 };
 
 export const approveOffer = async (req, res) => {
@@ -69,21 +110,21 @@ export const rejectOffer = async (req, res) => {
 
   res.status(204);
 };
-export const getOffByPost = async (req, res) => {
+export const getOfferByPost = async (req, res) => {
   const postId = req.params.id;
 
-  const check = await Offer.findById(postId);
+  const offersByPost = await Offer.find({
+    post_id: postId,
+  });
 
-  if (!check)
+  if (!offersByPost)
     return res.status(404).json({
-      status: falss,
+      status: false,
       message: "not found",
     });
 
   return res.status(200).json({
     status: true,
-    data: await Offer.findOne({
-      post_id: postId,
-    }),
+    data: offersByPost,
   });
 };
