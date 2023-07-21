@@ -31,7 +31,7 @@ export const createOffer = async (req, res, next) => {
     });
   }
 
-  const checkOffer = await Offer.find({
+  const checkOffer = await Offer.findOne({
     post_id: postId,
     user_id: userId,
   });
@@ -128,22 +128,21 @@ export const approveOffer = async (req, res) => {
     const email = post.user.email;
 
     sendExchangeInfoEmail(email, post._id, message);
-  } else {
-    return res.status(400).json({ message: "Error in exchange" });
   }
 
-  post.updateOne({
+  await post.updateOne({
     status: "hidden",
     point: offer.point,
   });
 
   await post.save();
+  console.log("file: offer.controller.js:104 ~ approveOffer ~ post:", post);
 
   await offer.updateOne({
     status: "approved",
   });
 
-  res.status(204);
+  res.status(204).json({});
 };
 export const rejectOffer = async (req, res) => {
   const offerId = req.params.id;
@@ -159,8 +158,9 @@ export const rejectOffer = async (req, res) => {
     status: "rejected",
   });
 
-  res.status(204);
+  res.status(204).json({});
 };
+
 export const getOfferByPost = async (req, res) => {
   const postId = req.params.id;
 
