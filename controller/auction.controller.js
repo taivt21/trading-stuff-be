@@ -191,7 +191,10 @@ const getAuctionById = async (req, res) => {
 const getAuctionByPostId = async (req, res) => {
   const postId = req.params.id;
   try {
-    const auctions = await Auction.find({ postId: postId });
+    const auctions = await Auction.find({ postId: postId }).populate({
+      path: "bidders.user",
+      model: "Users",
+    });
     res.status(200).json(auctions);
   } catch (error) {
     console.error("Lỗi khi tìm auctions:", error);
