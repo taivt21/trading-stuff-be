@@ -1,6 +1,7 @@
 import Auction from "../entities/auction.js";
 import Posts from "../entities/post.js";
 import Users from "../entities/user.js";
+import mongoose from "mongoose";
 
 // Hàm kiểm tra điều kiện đủ điểm đấu giá
 const checkBidderPoints = async (bidderId, bidAmount) => {
@@ -28,11 +29,13 @@ const placeBid = async (req, res) => {
     const bidAmount = req.body.bidAmount;
     const bidderId = req.user.id;
 
+    // Kiểm tra xem bài đăng có tồn tại không
     const post = await Posts.findById(postId).populate("user");
     if (!post) {
       return res.status(404).json({ message: "Bài đăng không tồn tại." });
     }
 
+    // Kiểm tra loại bài đăng có phải là đấu giá không
     if (post.typePost !== "auction") {
       return res
         .status(400)
@@ -50,11 +53,13 @@ const placeBid = async (req, res) => {
         .json({ message: "Thời gian đấu giá đã kết thúc." });
     }
 
+    // Tìm phiên đấu giá dựa trên postId
     let bidderIndex = -1;
     let totalBidAmount = bidAmount;
 
     const auction = await Auction.findOne({ postId: postId });
 
+    // Kiểm tra xem người đấu giá đã đấu giá hay chưa
     if (auction) {
       bidderIndex = auction.bidders.findIndex(
         (bidder) => bidder.user.equals(bidderId),
@@ -62,21 +67,25 @@ const placeBid = async (req, res) => {
       );
 
       if (bidderIndex !== -1) {
+        // Nếu người đấu giá đã đấu giá trước đó, cộng điểm đấu giá cũ và điểm đấu giá mới được gửi
         totalBidAmount = auction.bidders[bidderIndex].bidAmount + bidAmount;
         console.log(totalBidAmount, bidAmount);
       }
     }
 
+    // Kiểm tra xem người đấu giá có đủ điểm để đấu giá hay không
     const hasEnoughPoints = await checkBidderPoints(bidderId, bidAmount);
     if (!hasEnoughPoints) {
       return res.status(400).json({ message: "Không đủ điểm để đấu giá." });
     }
 
+    // Kiểm tra giá đấu giá có hợp lệ không
     const isBidAmountValid = checkBidAmountValidity(totalBidAmount, post);
     if (!isBidAmountValid) {
       return res.status(400).json({ message: "Giá đấu giá không hợp lệ." });
     }
 
+    // Thêm thông tin đấu giá vào bảng Auction
     if (auction) {
       if (bidderIndex === -1) {
         auction.bidders.push({
@@ -103,11 +112,12 @@ const placeBid = async (req, res) => {
 
       await newAuction.save();
     }
-
+    // Trừ điểm của người đấu giá
     const bidder = await Users.findById(bidderId);
     bidder.point -= bidAmount;
     await bidder.save();
 
+    // Lấy danh sách người đấu giá theo thứ tự giảm dần theo điểm
     const bidders = await Auction.findById(auction.id)
       .populate("bidders.user", "username point")
       .sort({ "bidders.bidAmount": -1 });
@@ -172,5 +182,20 @@ const getAuctionById = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
-export { placeBid, deleteHighestBidder, getAllAuction, getAuctionById };
+const getAuctionByPostId = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const auctions = await Auction.find({ postId: postId });
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error("Lỗi khi tìm auctions:", error);
+    res.status(500).json({ error: "Đã xảy ra lỗi khi tìm auctions" });
+  }
+};
+export {
+  placeBid,
+  deleteHighestBidder,
+  getAllAuction,
+  getAuctionById,
+  getAuctionByPostId,
+};
