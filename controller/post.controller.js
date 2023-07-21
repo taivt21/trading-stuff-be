@@ -37,7 +37,7 @@ export const createPost = async (req, res) => {
         typePost,
       });
       await post.save();
-
+      console.log(post);
       // Tạo phiên đấu giá
       const newAuction = new Auctions({
         postId: post._id,
