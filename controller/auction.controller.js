@@ -163,7 +163,10 @@ const deleteHighestBidder = async (req, res) => {
 
 const getAllAuction = async (req, res) => {
   try {
-    const auctions = await Auction.find();
+    const auctions = await Auction.find().populate({
+      path: "bidders.user",
+      model: "Users",
+    });
     return res.status(200).json(auctions);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -173,7 +176,10 @@ const getAllAuction = async (req, res) => {
 const getAuctionById = async (req, res) => {
   try {
     const auctionId = req.params.id;
-    const auction = await Auction.findById(auctionId);
+    const auction = await Auction.findById(auctionId).populate({
+      path: "bidders.user",
+      model: "Users",
+    });
     if (!auction) {
       return res.status(404).json({ message: "Phiên đấu giá không tồn tại." });
     }
