@@ -100,6 +100,7 @@ export const approvedInvoice = async (req, res) => {
         userId: userId,
         transaction_type: TRANSACTION_TYPE.PAID,
         point: invoice.point,
+        status: "success",
       });
 
       // Gửi email xác nhận

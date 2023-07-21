@@ -181,7 +181,7 @@ export const exchangeStuff = async (req, res) => {
       });
 
       //gửi mail
-      const email = userPost.email;
+      const email = post.user.email;
       sendExchangeInfoEmail(email, postId, message);
     } else if (post.typePost === "receive") {
       await Transactions.create({
