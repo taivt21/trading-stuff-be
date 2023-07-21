@@ -34,7 +34,8 @@ const transactionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+// Tạo chỉ mục cho trường createdAt
+transactionSchema.index({ post: 1 });
 const Transactions = mongoose.model("transactions", transactionSchema);
 
 export default Transactions;

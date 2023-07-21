@@ -14,10 +14,12 @@ const auctionSchema = new mongoose.Schema(
         bidAmount: { type: Number }, // Giá đấu giá của người đấu giá
       },
     ],
-    endTime: { type: Date }, // Thời gian kết thúc đấu giá
+    status: { type: String, enum: ["done", "ongoing"], default: "ongoing" },
   },
   { timestamps: true }
 );
+// Tạo chỉ mục cho trường createdAt
+auctionSchema.index({ createdAt: 1 });
 const Auctions = mongoose.model("auctions", auctionSchema);
 
 export default Auctions;
