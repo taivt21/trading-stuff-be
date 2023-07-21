@@ -104,10 +104,6 @@ export const approveOffer = async (req, res) => {
 
   // Kiểm tra loại bài đăng
   if (post.typePost === "give") {
-    if (user.point < post.point) {
-      return res.status(400).json({ message: "Dont enought point" });
-    }
-
     await Transactions.create({
       userId: req.user.id,
       transaction_type: TRANSACTION_TYPE.GIVE,
