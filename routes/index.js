@@ -9,6 +9,7 @@ import reportRoute from "./report.route.js";
 import testRoute from "./test.route.js";
 import transactionRoute from "./transaction.route.js";
 import auctionRoute from "./auction.route.js";
+import offerRoute from "./offer.route.js";
 
 const routes = express.Router();
 
@@ -21,6 +22,7 @@ routes.use("/report", reportRoute);
 routes.use("/auth", authRoute);
 routes.use("/transaction", transactionRoute);
 routes.use("/auction", auctionRoute);
+routes.use("/offer", offerRoute);
 
 routes.use("/test", testRoute);
 export default routes;

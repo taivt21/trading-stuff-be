@@ -1,7 +1,5 @@
 import Offer from "../entities/offfer.js";
-import User from "../entities/user.js";
 import Post from "../entities/post.js";
-import Offer from "../entities/offfer.js";
 
 export const createOffer = async (req, res, next) => {
   const userId = req.user.id;
