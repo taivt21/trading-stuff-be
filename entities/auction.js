@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 
 const auctionSchema = new mongoose.Schema(
   {
-    postId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Posts",
-    }, // ID của bài đăng đấu giá
+    postId: { type: mongoose.Schema.Types.ObjectId, ref: "Posts" },
     minPoint: { type: Number }, // Giá min để đấu giá
     bidStep: { type: Number }, // Bước nhảy giá khi đấu giá
     bidders: [

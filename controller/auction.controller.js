@@ -1,6 +1,7 @@
 import Auction from "../entities/auction.js";
 import Posts from "../entities/post.js";
 import Users from "../entities/user.js";
+import mongoose from "mongoose";
 
 // Hàm kiểm tra điều kiện đủ điểm đấu giá
 const checkBidderPoints = async (bidderId, bidAmount) => {
@@ -182,18 +183,15 @@ const getAuctionById = async (req, res) => {
   }
 };
 const getAuctionByPostId = async (req, res) => {
+  const postId = req.params.id;
   try {
-    const postId = req.params.id;
-    const auction = await Auction.find({ postId: postId }.populate("postId"));
-    if (!auction) {
-      return res.status(404).json({ message: "Phiên đấu giá không tồn tại." });
-    }
-    return res.status(200).json(auction);
+    const auctions = await Auction.find({ postId: postId });
+    res.status(200).json(auctions);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Lỗi khi tìm auctions:", error);
+    res.status(500).json({ error: "Đã xảy ra lỗi khi tìm auctions" });
   }
 };
-
 export {
   placeBid,
   deleteHighestBidder,
