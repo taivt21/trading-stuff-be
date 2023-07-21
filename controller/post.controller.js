@@ -4,6 +4,7 @@ import Transactions from "../entities/transaction.js";
 import { sendExchangeInfoEmail } from "../config/sendmail.js";
 import { TRANSACTION_CATEGORY, TRANSACTION_TYPE } from "../types/type.js";
 import Auctions from "../entities/auction.js";
+import User from "../entities/user.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -172,6 +173,19 @@ export const exchangeStuff = async (req, res) => {
         return res.status(400).json({ message: "Dont enought point" });
       }
 
+      //currentUser
+      await User.findByIdAndUpdate(userId, {
+        $inc: {
+          point: -post.point,
+        },
+      });
+      //user transaction
+      await User.findByIdAndUpdate(transaction.post.user, {
+        $inc: {
+          point: post.point,
+        },
+      });
+
       await Transactions.create({
         userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.GIVE,
@@ -184,6 +198,19 @@ export const exchangeStuff = async (req, res) => {
       const email = post.user.email;
       sendExchangeInfoEmail(email, postId, message);
     } else if (post.typePost === "receive") {
+      //currentUser
+      await User.findByIdAndUpdate(id, {
+        $inc: {
+          point: post.point,
+        },
+      });
+      //user transaction
+      await User.findByIdAndUpdate(post.user, {
+        $inc: {
+          point: -post.point,
+        },
+      });
+
       await Transactions.create({
         userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.RECEIVE,
