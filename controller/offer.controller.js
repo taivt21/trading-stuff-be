@@ -1,9 +1,21 @@
+import { sendExchangeInfoEmail } from "../config/sendmail.js";
 import Offer from "../entities/offfer.js";
 import Post from "../entities/post.js";
+import Transactions from "../entities/transaction.js";
+import User from "../entities/user.js";
+import { TRANSACTION_CATEGORY, TRANSACTION_TYPE } from "../types/type.js";
 
 export const createOffer = async (req, res, next) => {
   const userId = req.user.id;
   const { postId, point } = req.body;
+
+  const user = await User.findById(userId);
+
+  if (user.point < point) {
+    return res.status(400).json({
+      message: "you dont have enough points to make offer",
+    });
+  }
 
   const checkPost = await Post.findById(postId);
 
@@ -75,18 +87,61 @@ export const editOffer = async (req, res) => {
 };
 
 export const approveOffer = async (req, res) => {
+  const user = await User.findById(req.user.id);
+
   const offerId = req.params.id;
 
   const offer = await Offer.findById(offerId);
+
+  const message = "offer success";
 
   if (!offer)
     return res.status(404).json({
       message: "offer not found",
     });
 
-  await Post.findByIdAndUpdate(offer.post_id, {
+  const post = await Post.findById(offer.post_id).populate("user", "email");
+
+  // Kiểm tra loại bài đăng
+  if (post.typePost === "give") {
+    if (user.point < post.point) {
+      return res.status(400).json({ message: "Dont enought point" });
+    }
+
+    await Transactions.create({
+      userId: req.user.id,
+      transaction_type: TRANSACTION_TYPE.GIVE,
+      point: offer.point,
+      post: post._id,
+      transaction_category: TRANSACTION_CATEGORY.POST,
+    });
+
+    //gửi mail
+    const email = post.user.email;
+    sendExchangeInfoEmail(email, post._id, message);
+  } else if (post.typePost === "receive") {
+    await Transactions.create({
+      userId: req.user.id,
+      transaction_type: TRANSACTION_TYPE.RECEIVE,
+      point: offer.point,
+      post: post._id,
+      transaction_category: TRANSACTION_CATEGORY.POST,
+    });
+
+    //gửi mail
+    const email = post.user.email;
+
+    sendExchangeInfoEmail(email, post._id, message);
+  } else {
+    return res.status(400).json({ message: "Error in exchange" });
+  }
+
+  post.updateOne({
     status: "hidden",
+    point: offer.point,
   });
+
+  await post.save();
 
   await offer.updateOne({
     status: "approved",
@@ -115,7 +170,7 @@ export const getOfferByPost = async (req, res) => {
 
   const offersByPost = await Offer.find({
     post_id: postId,
-  });
+  }).populate("user_id", "email fullname img  ");
 
   if (!offersByPost)
     return res.status(404).json({
