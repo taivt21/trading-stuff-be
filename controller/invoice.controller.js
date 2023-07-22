@@ -31,7 +31,7 @@ export const getInvoceByUserId = async (req, res) => {
     res.status(200).json({
       status: "Success",
       messages: "Get invoice by userId successfully!",
-      data: { invoice },
+      data:  invoice ,
     });
   } catch (err) {
     res.status(500).json({
