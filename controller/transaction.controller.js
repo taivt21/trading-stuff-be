@@ -42,7 +42,6 @@ export const confirmTransaction = async (req, res) => {
     id: req.params.id,
     status: "pending",
   }).populate("post");
-  console.log(transaction);
 
   // console.log(await User.findById(transaction.post.user));
   if (!transaction)
@@ -125,6 +124,7 @@ export const rejectTransaction = async (req, res) => {
       },
     });
   }
+
   if (transaction.post.typePost === "auction") {
     // Check if the currentUser is a bidder in the auction
     const auction = await Auctions.findOne({

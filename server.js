@@ -19,14 +19,14 @@ db.once("open", () => {
 });
 
 // Lên lịch chạy hàm updateAuctionsAndTransactions mỗi 1 phút
-// cron.schedule("* * * * *", async () => {
-//   try {
-//     console.log("Đang chạy cron job...");
-//     await updateAuctionsAndTransactions();
-//   } catch (error) {
-//     console.error("Lỗi khi chạy cron job:", error);
-//   }
-// });
+cron.schedule("*/5 * * * *", async () => {
+  try {
+    console.log("Đang chạy cron job...");
+    await updateAuctionsAndTransactions();
+  } catch (error) {
+    console.error("Lỗi khi chạy cron job:", error);
+  }
+});
 app.listen(port, async () => {
   // await connect();
   console.log(`listening on ${port}`);

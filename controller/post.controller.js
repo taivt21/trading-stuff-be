@@ -219,6 +219,10 @@ export const exchangeStuff = async (req, res) => {
         transaction_category: TRANSACTION_CATEGORY.POST,
       });
 
+      await post.updateOne({
+        status: "hidden",
+      });
+
       //gửi mail
       const email = post.user.email;
       sendExchangeInfoEmail(email, postId, message);
