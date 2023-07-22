@@ -179,12 +179,12 @@ export const exchangeStuff = async (req, res) => {
           point: -post.point,
         },
       });
-      //user transaction
-      await User.findByIdAndUpdate(transaction.post.user, {
-        $inc: {
-          point: post.point,
-        },
-      });
+      // //user transaction
+      // await User.findByIdAndUpdate(transaction.post.user, {
+      //   $inc: {
+      //     point: post.point,
+      //   },
+      // });
 
       await Transactions.create({
         userId: req.user.id,

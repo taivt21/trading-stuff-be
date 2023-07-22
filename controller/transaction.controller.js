@@ -36,13 +36,23 @@ export const getTransactionByUserId = async (req, res) => {
 export const confirmTransaction = async (req, res) => {
   // const id = req.user.id;
 
-  const transaction = await Transactions.findById(req.params.id);
+  const transaction = await Transactions.findById(req.params.id).populate(
+    "post"
+  );
 
+  // console.log(await User.findById(transaction.post.user));
   if (!transaction)
     return res.status(400).json({
       status: false,
       message: "transaction not found",
     });
+
+  // cong diem cho nguoi post
+  await User.findByIdAndUpdate(transaction.post.user, {
+    $inc: {
+      point: transaction.point,
+    },
+  });
 
   await transaction.updateOne({
     status: "success",
@@ -95,12 +105,12 @@ export const rejectTransaction = async (req, res) => {
         point: -transaction.post.point,
       },
     });
-    //user transaction
-    await User.findByIdAndUpdate(transaction.post.user, {
-      $inc: {
-        point: transaction.post.point,
-      },
-    });
+    // //user transaction
+    // await User.findByIdAndUpdate(transaction.post.user, {
+    //   $inc: {
+    //     point: transaction.post.point,
+    //   },
+    // });
   }
   if (transaction.post.typePost === "give") {
     //currentUser
@@ -109,12 +119,12 @@ export const rejectTransaction = async (req, res) => {
         point: transaction.post.point,
       },
     });
-    //user transaction
-    await User.findByIdAndUpdate(transaction.post.user, {
-      $inc: {
-        point: -transaction.post.point,
-      },
-    });
+    // //user transaction
+    // await User.findByIdAndUpdate(transaction.post.user, {
+    //   $inc: {
+    //     point: -transaction.post.point,
+    //   },
+    // });
   }
 
   await Posts.findByIdAndUpdate(transaction.post, {
