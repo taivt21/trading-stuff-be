@@ -17,6 +17,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB database");
 });
+
 // Lên lịch chạy hàm updateAuctionsAndTransactions mỗi 1 phút
 // cron.schedule("* * * * *", async () => {
 //   try {

@@ -24,6 +24,23 @@ export const getInvoce = async (req, res) => {
     });
   }
 };
+export const getInvoceByUserId = async (req, res) => {
+  try {
+    const invoice = await Invoices.find({ user: req.user.id }).populate("user");
+
+    res.status(200).json({
+      status: "Success",
+      messages: "Get invoice by userId successfully!",
+      data: { invoice },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "Fail",
+      messages: err.message,
+    });
+  }
+};
+
 export const createInvoice = async (req, res) => {
   try {
     const userId = req.user.id;
