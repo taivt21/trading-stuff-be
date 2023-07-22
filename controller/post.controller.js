@@ -186,6 +186,10 @@ export const exchangeStuff = async (req, res) => {
       //   },
       // });
 
+      await post.updateOne({
+        status: "hidden",
+      });
+
       await Transactions.create({
         userId: req.user.id,
         transaction_type: TRANSACTION_TYPE.GIVE,
@@ -204,7 +208,7 @@ export const exchangeStuff = async (req, res) => {
           point: post.point,
         },
       });
-      //user transaction
+      //user <transaction></transaction>
       await User.findByIdAndUpdate(post.user, {
         $inc: {
           point: -post.point,
