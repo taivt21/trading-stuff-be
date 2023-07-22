@@ -25,7 +25,9 @@ export const getTransactionByUserId = async (req, res) => {
 
   const transaction = await Transactions.find({
     userId: id,
-  }).select("-userId -__v -updatedAt");
+  })
+    .select("-userId -__v -updatedAt")
+    .populate("userId");
 
   res.status(200).json({
     status: true,
