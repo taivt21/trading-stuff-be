@@ -227,7 +227,7 @@ export const exchangeStuff = async (req, res) => {
     }
 
     // Cập nhật trạng thái bài đăng
-    post.status = "hidden";
+    // post.status = "hidden";
     await post.save();
 
     return res.status(200).json({ message: "Exchange successfully." });
