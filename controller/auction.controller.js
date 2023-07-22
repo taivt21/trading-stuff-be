@@ -190,6 +190,7 @@ const getAuctionById = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const getAuctionByPostId = async (req, res) => {
   const postId = req.params.id;
   try {
@@ -203,61 +204,6 @@ const getAuctionByPostId = async (req, res) => {
     res.status(500).json({ error: "Đã xảy ra lỗi khi tìm auctions" });
   }
 };
-const aprroveAuction = async (req, res) => {
-  try {
-    const transaction = await Transactions.findById(
-      req.params.transactionId
-    ).populate("post");
-
-    if (!transaction) {
-      return res.status(404).json("Không tìm thấy transaction");
-    }
-
-    const { point, post } = transaction;
-
-    const user = await Posts.findByIdAndUpdate(
-      post._id,
-      { $inc: { "user.point": point } },
-      { new: true }
-    );
-
-    if (!user) {
-      return res.status(404).json("Không tìm thấy bài đăng");
-    }
-
-    return res.status(200).json("Approved successfully");
-  } catch (error) {
-    res.status(500).json(error.message);
-  }
-};
-const rejectAuction = async (req, res) => {
-  try {
-    const transactionId = req.params.transactionId;
-    const userId = req.user.id;
-
-    const transaction = await Transactions.findById(transactionId).populate(
-      "post"
-    );
-
-    if (!transaction) {
-      return res.status(404).json("Không tìm thấy transaction");
-    }
-
-    if (transaction.userId.toString() !== userId) {
-      return res.status(403).json("Unauthorized");
-    }
-
-    const { point } = transaction;
-
-    req.user.point -= point;
-
-    await req.user.save();
-
-    return res.status(200).json("Rejected successfully");
-  } catch (error) {
-    res.status(500).json(error.message);
-  }
-};
 
 export {
   placeBid,
@@ -265,6 +211,4 @@ export {
   getAllAuction,
   getAuctionById,
   getAuctionByPostId,
-  aprroveAuction,
-  rejectAuction,
 };
